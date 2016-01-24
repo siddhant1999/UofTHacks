@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +10,6 @@
     <meta name="author" content="">
 
     <title>Le website</title>
-
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'>
-
+	
 </head>
 
 <body id="page-top" data-spy="scroll">
@@ -33,7 +33,7 @@
             <h1>Accounted Itinerant</h1>
             <p>Compare the costs of getting to your destination</p>
             <br>
-            <form id="initial-form" class="form-horizontal" role="form">
+            <form id="initial-form" class="form-horizontal" role="form" method="get" >
 
                 <div id="form-group-1" class="form-group">
                     <div class="col-sm-6 col-sm-offset-3 input-group input-group-lg">
@@ -71,7 +71,14 @@
         </div>
     </div>
 
-    <!-- jQuery library -->
+    <br>
+    Basic example for using the Distance Matrix.<br><br>
+    Origin: <input id="orig" type="text" style="width:35em"><br><br>
+    Destination: <input id="dest" type="text" style="width:35em"><br><br>
+    Distance: <input id="dist" type="text" style="width:35em"><br><br>
+    Price: <input id="price" type="text" style="width:35em">
+    
+	<!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
     <!-- Latest compiled JavaScript -->
@@ -82,64 +89,65 @@
 
 
 <script>
-$( "#origin" ).focus(function() {
+var origin, destination;
+/*$( "#origin" ).focus(function() {
     //add fancy stuff
 });
 $( "#destination" ).focus(function() {
     //add fancy stuff
-});
-
-
+});*/
 jQuery(document).ready(function () {
     var map;
-
     var style =
 [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}]
-
     var options = {
         zoom: 11,
         center:  new google.maps.LatLng(43.7000, -79.4000),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true
     };
-
     map = new google.maps.Map($('#map')[0], options);
     map.setOptions({
         styles: style
     });
-
 });
 
+$("#form-group-3 button").on("click",function(){
+	submit();
+});
+/*$('#initial-form').submit(function(event) {
 
-$( "#initial-form" ).submit(function() {
-    var origin = $('#origin').val(function(){
-        var destination = $('#destination').val(function(){
-            $("#menu").remove();//make sure values are collected before removal
-
+    origin = $('#origin').val(function(){
+        destination = $('#destination').val(function(){
+           //make sure values are collected before removal
         });
     });
+    console.log("origin: " + origin);
     //add logic here to dfault to current location when field is blank
-    submit();
-});
-
+    //submit();
+});*/
 function submit(){
-    //sidd's code
+event.preventDefault();
+console.log("hello");
+	origin = $("input#origin").val();
+	destination = $("input#destination").val();
+	$('#menu').remove();
+	console.log("origin is " + origin +  " and destination is " + destination); 
+		    //sidd's code
     //var origin = new google.maps.LatLng(55.930385, -3.118425),
-    var origin = "Toronto, ON",
-        destination = "Pickering, ON",
+    //var origin = "Toronto, ON",
+        //destination = "Pickering, ON",
         service = new google.maps.DistanceMatrixService();
-
     service.getDistanceMatrix(
         {
-            origins: [origin],
-            destinations: [destination],
+            origins: [destination],
+            destinations: [origin],
             travelMode: google.maps.TravelMode.DRIVING,
             avoidHighways: false,
             avoidTolls: false
         },
         callback
     );
-
     function callback(response, status) {
         var orig = document.getElementById("orig"),
             dest = document.getElementById("dest"),
@@ -151,7 +159,6 @@ function submit(){
             dist.value = response.rows[0].elements[0].distance.text;
             var totdist = dist.value.slice(0, dist.value.length-3);
             totdist = parseFloat(dist.value);
-
            //dist.value = 9;
             var a = totdist/1.6;
             var mileage = 24;
@@ -160,33 +167,16 @@ function submit(){
             var p = liters *0.95;
             var sum = 0;
             var deci = false;
-            /*if(dist.value[i] >= 0 && dist.value[i] <= 9){
-            			sum += 1;
-            	}*/
-            /*for(var i = (dist.value.length-1); i >= 0; i--){
-            	if(dist.value[i] == 'k' || dist.value[i] == 'm'){
-            		dist = dist.value.slice(0, dist.value.length-2);
-            	}
-            	if(dist.value[i] == '.'){
-            		counter = true;
-            	}
-            }*/
-
-            /*for(var i = (dist.value.length-1); i >= 0; i--){
-            	if(dist.value[i] == '.'){
-            		counter = true;
-            	}
-            }*/
-            price.value = p.toFixed(2);;//dist.value.length;
-
+            
+            price.value = p.toFixed(2);//dist.value.length;
         } else {
             alert("Error: " + status);
         }
     }
+    console.log("hello");
 }
-
-
 </script>
+
 </body>
 
 </html>
